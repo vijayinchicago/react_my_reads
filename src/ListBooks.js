@@ -1,26 +1,16 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import serializeForm from 'form-serialize'
 
  class ListBooks extends Component{
  	static propTypes={
  		books: PropTypes.array.isRequired,
- 		onChangeShelf: PropTypes.func.isRequired,
- 		newShelf: PropTypes.string
- 	}
-
- 	handleChange(id, value){
- 		//const values=serializeForm(e.target, {hash: true})
- 		console.log(id, value)
- 		this.setState({changeShelfbookId: id})
- 		this.setState({changeShelfNewShelf: value})
- 		//onChangeShelf(this.state.changeShelfbookId,this.state.changeShelfNewShelf)
-
+ 		onSelectChange: PropTypes.func.isRequired
  	}
 
  	render() {
- 		const {books, onChangeShelf, newShelf}=this.props;
+ 		const {books}=this.props;
+ 		//console.log(books)
 	    let shelfCurrentlyReading=books.filter((book) => book.shelf==='currentlyReading');
 	    let shelfWantToRead=books.filter((book) => book.shelf==='wantToRead');
 	    let shelfRead=books.filter((book) => book.shelf==='read') ;
@@ -44,24 +34,24 @@ import serializeForm from 'form-serialize'
                   <div className="bookshelf-books">
                     <ol className="books-grid">
                     {shelfCurrentlyReading.map(book =>
-                      <li key={book.id} >
-                        <div className="book" >
-                          <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                            <div className="book-shelf-changer">
-                              <select onChange={(event) =>onChangeShelf([book.id]+":"+event.target.value)}>
-                          
-                                <option value="none" disabled>Move to...</option>
-                                <option value="currentlyReading">Currently Reading</option>
-                                <option value="wantToRead">Want to Read</option>
-                                <option value="read">Read</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="book-title">{book.title}</div>
-                          <div className="book-authors">{book.author}</div>
-                        </div>
-                      </li>
+                      <li key={book.id}>
+            <div className="book">
+              <div className="book-top">
+                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                <div className="book-shelf-changer">
+                  <select value={book.shelf} onChange={e => this.props.onSelectChange(book,e)}>
+                    <option value="none" disabled>Move to...</option>
+                    <option value="currentlyReading">Currently Reading</option>
+                    <option value="wantToRead">Want to Read</option>
+                    <option value="read">Read</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+              </div>
+              <div className="book-title">{book.title}</div>
+              <div className="book-authors">{book.authors.join(', ')}</div>
+            </div>
+          </li>
                    )}
                     </ol>
                   </div>
@@ -79,23 +69,24 @@ import serializeForm from 'form-serialize'
                   <div className="bookshelf-books">
                     <ol className="books-grid">
                     {shelfWantToRead.map(book =>
-                      <li key={book.id}>
-                        <div className="book">
-                          <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                            <div className="book-shelf-changer">
-                              <select onChange={(event) =>onChangeShelf([book.id]+":"+event.target.value)}>
-                                <option value="none" disabled>Move to...</option>
-                                <option value="wantToRead">Want To Read</option>
-                                <option value="currentlyReading">Currently Reading</option>
-                                <option value="read">Read</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="book-title">{book.title}</div>
-                          <div className="book-authors">{book.author}</div>
-                        </div>
-                      </li>
+<li key={book.id}>
+            <div className="book">
+              <div className="book-top">
+                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                <div className="book-shelf-changer">
+                  <select value={book.shelf} onChange={e => this.props.onSelectChange(book,e)}>
+                    <option value="none" disabled>Move to...</option>
+                    <option value="currentlyReading">Currently Reading</option>
+                    <option value="wantToRead">Want to Read</option>
+                    <option value="read">Read</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+              </div>
+              <div className="book-title">{book.title}</div>
+              <div className="book-authors">{book.authors.join(', ')}</div>
+            </div>
+          </li>
                    )}
                     </ol>
                   </div>
@@ -115,23 +106,24 @@ import serializeForm from 'form-serialize'
                   <div className="bookshelf-books">
                     <ol className="books-grid">
                     {shelfRead.map(book =>
-                      <li key={book.id}>
-                        <div className="book">
-                          <div className="book-top">
-                            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
-                            <div className="book-shelf-changer">
-                              <select onChange={(event) =>this.onChangeShelf([book.id]+":"+event.target.value)}>
-                                <option value="none" disabled>Move to...</option>
-                                <option value="Read">Read</option>
-                                <option value="currentlyReading">Currently Reading</option>
-                                <option value="wantToRead">Want to Read</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div className="book-title">{book.title}</div>
-                          <div className="book-authors">{book.author}</div>
-                        </div>
-                      </li>
+<li key={book.id}>
+            <div className="book">
+              <div className="book-top">
+                <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})` }}></div>
+                <div className="book-shelf-changer">
+                  <select value={book.shelf} onChange={e => this.props.onSelectChange(book,e)}>
+                    <option value="none" disabled>Move to...</option>
+                    <option value="currentlyReading">Currently Reading</option>
+                    <option value="wantToRead">Want to Read</option>
+                    <option value="read">Read</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+              </div>
+              <div className="book-title">{book.title}</div>
+              <div className="book-authors">{book.authors.join(', ')}</div>
+            </div>
+          </li>
                    )}
                     </ol>
                   </div>
@@ -148,8 +140,7 @@ import serializeForm from 'form-serialize'
 	}
 	ListBooks.PropTypes={
 		books: PropTypes.array.isRequired,
-		onChangeShelf: PropTypes.func.isRequired,
-		newShelf: PropTypes.string
+		onSelectChange: PropTypes.func.isRequired
 	}
 export default ListBooks
 

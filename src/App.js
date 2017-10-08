@@ -6,52 +6,66 @@ import SearchBooks from './SearchBooks'
 import './App.css'
 
 class App extends Component {
-  state = {books: []}
+  state = {books: [], searchResults:[]}
 
-  componentDidMount(){
+  componentWillMount(){
     BooksAPI.getAll().then((books) => {
-      console.log({books})
+     // console.log({books})
       this.setState({books})
     })
   }
- moveBooks(ListBook) {
-    // based on the selected book id, filter down to the book and setState for new shelf based on selection
-    console.log(ListBook)
-    let result=ListBook.split(":")
-    let id=result[0]
-    console.log(id)
-    let value=result[1]
-    let books=this.state.books
-    books.map(book =>{
-      if(book.id===id)
-      {
-        book.shelf=value
-        BooksAPI.update(id, value).then(shelf => {
-          console.log(shelf)
-        })
-/*        BooksAPI.getAll().then((books) => {
-          console.log(books)
-        })
-  */      this.setState(
-          {books:books}
-          )
-      }
+
+
+    handleSelectChange = (book, shelf) => {
+     // console.log('Book:' + book + 'Shelf:' + shelf)
+     // console.log(book.id)
+    BooksAPI.update(book, shelf).then(() => {
+      let books=this.state.books
+      books.map(currBook =>{
+        if(currBook.id===book.id)
+          {currBook.shelf=shelf
+            this.setState(
+              books:books)}
+      })
     })
+  }
+
+  handleSearch=(term) => {
+    if(term.length>0)
+    {
+      this.setState({searchResults:[]})
+      BooksAPI.search(term,20).then(book => {
+          this.setState(
+          {
+            searchResults: book
+          })
+        })
     }
+    else
+    {
+      this.setState(
+        {searchResults: []}
+        )
+      }
+    }
+
+
   render() {
     return (
         <div className="app">
         <Route exact path="/"render={() => (
             <ListBooks     
-              onChangeShelf={e => this.moveBooks(e)}
+              onSelectChange={(book,event) => this.handleSelectChange(book,event.target.value)}
               books={this.state.books}
             />
           )}
         />                  
         <Route path="/search" render={() => (
             <SearchBooks
-            books={this.state.books} 
-              onChangeShelf={e => this.moveBooks(e)}
+            books={this.state.books}
+            searchResults={this.state.searchResults}
+            onSearchChange={event => this.handleSearch(event.target.value)}   
+              onSelectChange={(book,event) => this.handleSelectChange(book,event.target.value)}
             />
           )}
         />
